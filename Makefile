@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # ==============================================================================
 # SMART BANKING MANAGEMENT SYSTEM - MAKEFILE (Windows / MinGW-w64 UCRT64)
 # ==============================================================================
@@ -49,3 +50,31 @@ test:
 	@powershell -Command "Remove-Item test_runner.exe -ErrorAction SilentlyContinue"
 
 .PHONY: all clean directories copy_dll test
+=======
+CC      = gcc
+CFLAGS  = -Wall -Wextra -g -Iinclude
+LDFLAGS = -lmariadb
+
+SRC = $(wildcard src/*.c)
+BIN = build/bank.exe
+
+all: $(BIN)
+
+$(BIN): $(SRC)
+	$(CC) $(CFLAGS) $(SRC) -o $(BIN) $(LDFLAGS)
+
+run: all
+	$(BIN)
+
+# Stage 1 environment checks
+check-c:
+	$(CC) $(CFLAGS) tests/test_env.c -o build/test_env.exe
+	build/test_env.exe
+
+check-db:
+	$(CC) $(CFLAGS) tests/test_mysql.c -o build/test_mysql.exe $(LDFLAGS)
+	build/test_mysql.exe
+
+clean:
+	del /Q build\*.exe 2>nul
+>>>>>>> f4a6c70253e54e5b0edbdafc152f4de53d082ad4
