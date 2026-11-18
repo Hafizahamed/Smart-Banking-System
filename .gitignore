@@ -1,0 +1,26 @@
+# Binaries & Object files
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+build/
+bin/
+
+# MySQL local database data
+mysql_data/
+*.pid
+*.err
+*.log
+
+# Environment variables
+.env
+.env.local
+
+# IDE & OS
+.vscode/
+.idea/
+Thumbs.db
+[Dd]esktop.ini
+.DS_Store

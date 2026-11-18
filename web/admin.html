@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Banking - Administrative Control Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body style="background-color: #050811;">
+
+  <!-- Admin Login View -->
+  <div id="admin-login-view" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem;">
+    <div class="card" style="max-width: 440px; width: 100%; padding: 2.5rem;">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <img src="assets/logo.svg" alt="Smart Bank" style="width: 52px; height: 52px; margin-bottom: 0.75rem;">
+        <h2 style="font-size: 1.6rem; font-weight: 800;">Bank Officer Portal</h2>
+        <span class="admin-header-badge" style="margin-top: 0.5rem; display: inline-block;">Restricted Area</span>
+      </div>
+
+      <form id="admin-login-form">
+        <div class="form-group">
+          <label class="form-label">Officer Username</label>
+          <input type="text" id="admin-username" class="form-control" value="superadmin" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Security Password</label>
+          <input type="password" id="admin-password" class="form-control" value="Admin@123" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="padding: 0.85rem; margin-top: 1rem;">
+          Authenticate Officer
+        </button>
+      </form>
+
+      <div style="margin-top: 1.5rem; padding: 0.75rem; background: rgba(245,158,11,0.08); border: 1px dashed var(--color-warning); border-radius: var(--radius-md); font-size: 0.8rem; color: var(--text-muted); text-align: center;">
+        <strong>Available Roles:</strong><br>
+        <code>superadmin</code> / <code>admin</code> / <code>support</code> / <code>auditor</code><br>
+        <strong>Default Password:</strong> <code>Admin@123</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard View -->
+  <div id="admin-dashboard-view" style="display: none; min-height: 100vh;">
+    <!-- Top Header -->
+    <header class="top-header" style="background: rgba(11, 17, 32, 0.95); border-bottom: 1px solid var(--border-color); padding: 0 2rem;">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <img src="assets/logo.svg" alt="Smart Bank" style="width: 32px; height: 32px;">
+        <span style="font-weight: 800; font-size: 1.15rem; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          SmartBank Command Center
+        </span>
+        <span id="admin-display-role" class="admin-header-badge">ADMIN</span>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 1.25rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <i data-lucide="shield-check" style="color: var(--accent-cyan); width: 18px;"></i>
+          <span id="admin-display-name" style="font-size: 0.9rem; font-weight: 600;">System Administrator</span>
+        </div>
+        <button id="admin-logout-btn" class="btn btn-danger btn-sm">
+          <i data-lucide="log-out"></i> Log Out
+        </button>
+      </div>
+    </header>
+
+    <div style="max-width: 1440px; margin: 0 auto; padding: 2rem;">
+      <!-- Tab Navigation -->
+      <nav class="admin-tab-nav">
+        <button class="admin-tab-btn active" data-tab="overview"><i data-lucide="layout-grid"></i> Overview</button>
+        <button class="admin-tab-btn" data-tab="customers"><i data-lucide="users"></i> Customers</button>
+        <button class="admin-tab-btn" data-tab="transactions"><i data-lucide="activity"></i> Transactions & AML</button>
+        <button class="admin-tab-btn" data-tab="requests"><i data-lucide="inbox"></i> Service Queue</button>
+        <button class="admin-tab-btn" data-tab="audit"><i data-lucide="shield"></i> Audit Logs</button>
+        <button class="admin-tab-btn" data-tab="health"><i data-lucide="heart-pulse"></i> System Health</button>
+      </nav>
+
+      <!-- TAB 1: OVERVIEW -->
+      <div id="tab-overview" class="admin-tab-pane">
+        <div class="kpi-metric-row">
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-blue"><i data-lucide="users"></i></div>
+            <div>
+              <div class="kpi-title">Registered Customers</div>
+              <div class="kpi-value" id="kpi-total-cust">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-cyan"><i data-lucide="credit-card"></i></div>
+            <div>
+              <div class="kpi-title">Active Bank Accounts</div>
+              <div class="kpi-value" id="kpi-total-acc">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-amber"><i data-lucide="vault"></i></div>
+            <div>
+              <div class="kpi-title">Total Vault Deposits</div>
+              <div class="kpi-value" id="kpi-total-vault" style="font-size: 1.25rem;">₹0.00</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-blue"><i data-lucide="receipt"></i></div>
+            <div>
+              <div class="kpi-title">Total Transactions</div>
+              <div class="kpi-value" id="kpi-total-tx">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-red"><i data-lucide="alert-triangle"></i></div>
+            <div>
+              <div class="kpi-title">Flagged / Suspicious</div>
+              <div class="kpi-value" id="kpi-flagged-tx" style="color: var(--color-danger);">0</div>
+            </div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-icon kpi-icon-amber"><i data-lucide="clock"></i></div>
+            <div>
+              <div class="kpi-title">Pending Tickets</div>
+              <div class="kpi-value" id="kpi-pending-sr">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: CUSTOMERS -->
+      <div id="tab-customers" class="admin-tab-pane" style="display: none;">
+        <div class="admin-search-bar">
+          <input type="text" id="admin-search-input" class="form-control" placeholder="Search by name, email, or customer ID...">
+          <button id="btn-admin-search-cust" class="btn btn-primary"><i data-lucide="search"></i> Search</button>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="bank-table">
+              <thead>
+                <tr>
+                  <th>Customer ID</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Status</th>
+                  <th>Accounts</th>
+                  <th>Total Balance</th>
+                  <th>Administrative Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-cust-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: TRANSACTIONS & AML -->
+      <div id="tab-transactions" class="admin-tab-pane" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <button class="btn btn-secondary btn-sm" onclick="AdminApp.loadTransactions(false)">Show All</button>
+            <button class="btn btn-danger btn-sm" onclick="AdminApp.loadTransactions(true)">Show Flagged AML Only</button>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">Real-time database transaction audit</div>
+        </div>
+
+        <div class="card">
+          <div class="table-responsive">
+            <table class="bank-table">
+              <thead>
+                <tr>
+                  <th>Ref ID</th>
+                  <th>Type</th>
+                  <th>From &rarr; To</th>
+                  <th>Category</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>AML Flag Reason</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="admin-tx-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: SERVICE QUEUE -->
+      <div id="tab-requests" class="admin-tab-pane" style="display: none;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i data-lucide="inbox"></i> Service Request Ticket Queue</span>
+          </div>
+          <div class="table-responsive">
+            <table class="bank-table">
+              <thead>
+                <tr>
+                  <th>Ticket</th>
+                  <th>Customer</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Description</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="admin-sr-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 5: AUDIT TRAIL -->
+      <div id="tab-audit" class="admin-tab-pane" style="display: none;">
+        <div class="card">
+          <div class="card-header">
+            <span class="card-title"><i data-lucide="shield"></i> Immutable System Audit Trail</span>
+          </div>
+          <div class="table-responsive">
+            <table class="bank-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Actor</th>
+                  <th>Action</th>
+                  <th>Entity</th>
+                  <th>Details</th>
+                  <th>IP Address</th>
+                </tr>
+              </thead>
+              <tbody id="admin-audit-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: SYSTEM HEALTH -->
+      <div id="tab-health" class="admin-tab-pane" style="display: none;">
+        <div class="card" style="max-width: 800px; margin: 0 auto;">
+          <div class="card-header">
+            <span class="card-title"><i data-lucide="heart-pulse"></i> Core System & Database Diagnostics</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+              <span style="color: var(--text-muted);">Database Status:</span>
+              <span id="health-db-status" class="badge badge-success">CONNECTED</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+              <span style="color: var(--text-muted);">MySQL Server Version:</span>
+              <strong id="health-mysql-ver">MySQL 8.0.46</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+              <span style="color: var(--text-muted);">HTTP Web Server:</span>
+              <strong id="health-http-engine">Mongoose Embedded HTTP C Server</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem;">
+              <span style="color: var(--text-muted);">Active Authenticated Sessions:</span>
+              <strong id="health-sessions">0</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; padding-bottom: 0.75rem;">
+              <span style="color: var(--text-muted);">Cryptography Engine:</span>
+              <span id="health-crypto" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent-cyan);">Argon2id (RFC 9106)</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    if (window.lucide) lucide.createIcons();
+  </script>
+</body>
+</html>
